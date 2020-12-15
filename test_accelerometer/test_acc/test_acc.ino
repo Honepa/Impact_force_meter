@@ -9,16 +9,24 @@ sensors_event_t event;
 float y, Ay, Sy, ky, kiy, ey, Iy, Int_y, dt, ex, Ix, Int_x, Ax, x, Sx, kx, kix = 0;
 float A_n = 100.0;
 long t0, t = 0;
-  
+long d_time, time0, time1 = 0;
+float a_const, a_max, a_pre = 0;
+float velocity = 0;
+
 void setup() 
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Accelerometer Test"); Serial.println("");
   if (!accel.begin())
   {
     Serial.println("Ooops, no ADXL345 detected ... Check your wiring!");
     while (1);
   }
+  
+  accel.getEvent(&event);
+  float z = event.acceleration.z;
+  a_const = abs(z);
+  
 }
 
 float getY()
@@ -39,25 +47,33 @@ float getX()
   return x;
 }
 
+float time_seconds = 0;
+
+
 void loop() 
 {
   t0 = millis();
   dt = (millis() - t) / 1000.0; t = millis();
-
-  y = getY();
-  //x = getX();//ay, ax
-
+  
+  //y = getY();
+  //x = getX();//ay, a
+  time_seconds = micros();
   accel.getEvent(&event);
   float z = event.acceleration.z;
+
+  Serial.print(z);
+  Serial.print("\t");
+  
+  
+  
+  
   
   //Serial.print(x);
   //Serial.print("\t");
   
-  Serial.print(y);
+  Serial.print(time_seconds);
   Serial.print("\t");
 
-  Serial.print(y);
-  Serial.print("\t");
   
   Serial.print("\n");
 
