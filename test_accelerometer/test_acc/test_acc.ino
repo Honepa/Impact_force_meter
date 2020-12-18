@@ -52,27 +52,27 @@ float time_seconds = 0;
 
 void loop() 
 {
-  t0 = millis();
-  dt = (millis() - t) / 1000.0; t = millis();
+  //t0 = millis();
+  //dt = (millis() - t) / 1000.0; t = millis();
   
-  //y = getY();
+  y = getY();
   //x = getX();//ay, a
   time_seconds = micros();
   accel.getEvent(&event);
   float z = event.acceleration.z;
 
-  Serial.print(z);
+  //Serial.println(z);
   Serial.print("\t");
   
   
   
   
   
-  //Serial.print(x);
+  Serial.print(y);
   //Serial.print("\t");
   
-  Serial.print(time_seconds);
-  Serial.print("\t");
+  //Serial.print(time_seconds);
+  //Serial.print("\t");
 
   
   Serial.print("\n");
