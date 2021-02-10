@@ -5,7 +5,7 @@
 #include <Wire.h>  // Wire library - used for I2C communication
 int ADXL345 = 0x53; // The ADXL345 sensor I2C address
 float X_out, Y_out, Z_out;  // Outputs
-
+float a, x, y, z;
 void setup() 
 {
   Serial.begin(115200); // Initiate serial communication for printing the results on the Serial monitor
@@ -32,10 +32,11 @@ void loop()
   Y_out = Y_out/256;
   Z_out = ( Wire.read()| Wire.read() << 8); // Z-axis value
   Z_out = Z_out/256;
-  Serial.print("Xa= ");
-  Serial.print((X_out / 0.97739) * 9.8);
-  Serial.print("   Ya= ");
-  Serial.print((Y_out / 0.97739) * 9.8);
-  Serial.print("   Za= ");
-  Serial.println((Z_out / 0.97739) * 9.8);
+  
+  x = (X_out / 0.97739) * 9.8;
+  y = (Y_out / 0.97739) * 9.8;
+  z = (Z_out / 0.97739) * 9.8;
+  a = sqrt(x * x + y * y + z * z);
+  Serial.println(a);
+  
 }

@@ -2,12 +2,15 @@
 
 int ADXL345 = 0x53;
 
-float a0, a, a_min, a_max, a_min_imp, a_max_imp = 0;
+long t, dt, t0 = 0;
+float maxI = 0;
+float a0, a, a_min, a_max, a_max_imp0, a_max_imp, I, I0 = 0;
 float Sz, Az = 0;
+float ac, x, y, z, X_out, Y_out, Z_out;
+float An = 50.0;
+int fl = 0;
 
-float An = 125.0;
-
-int count_min, count_max = 0;
+int count_min, count_max, count_maxI = 0;
 
 float getZ()
 {
@@ -17,13 +20,18 @@ float getZ()
   Wire.endTransmission(false);
   Wire.requestFrom(ADXL345, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
   
-  z = ( Wire.read()| Wire.read() << 8);
-  z = ( Wire.read()| Wire.read() << 8);
-  z = ( Wire.read()| Wire.read() << 8);// Z-axis value
-  z = z/256;
-  z = (z / 0.97739) * 9.8;
-
-  Sz = Sz + z - Az;
+  X_out = ( Wire.read()| Wire.read() << 8); // X-axis value
+  X_out = X_out/256; //For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
+  Y_out = ( Wire.read()| Wire.read() << 8); // Y-axis value
+  Y_out = Y_out/256;
+  Z_out = ( Wire.read()| Wire.read() << 8); // Z-axis value
+  Z_out = Z_out/256;
+  
+  x = X_out;
+  y = Y_out;
+  z = Z_out;
+  ac = sqrt(x * x + y * y + z * z);
+  Sz = Sz + ac - Az;
   Az = Sz / An;
   return Az;
 }
@@ -42,31 +50,53 @@ void setup()
   Wire.endTransmission();
   delay(10);  
 
-  Serial.print("a");
-  Serial.print(" ");
-  Serial.print("a_max");
-  Serial.print(" ");
-  Serial.print("a_min");
-  Serial.print(" ");
-  Serial.print("a_max_imp");
-  Serial.print(" ");
-  Serial.print("a_min_imp");
-  Serial.print("\n");
   
+  t = millis();
 }
 
 void loop() 
 {
-  a = getZ();
-  
-  if((a > 0.15) and (a > a0))
+  a = abs(getZ());
+
+  if(a > 1.1)
+  {
+    if((a0 > a) and fl)
+    {
+      a_max++;
+      fl = 0;
+      a_max_imp = a;
+    }
+    if((a0 < a) and (a > a_max_imp))
+    {
+      fl  = 1;
+    }
+    if((a_max_imp0 < a_max_imp) and (a0 < a))
+    {
+      a_max--;
+    }
+  }
+  else if (a < 1.1)
+  {
+    a_max_imp = 1.1;
+  }
+  a0 = a;
+  a_max_imp0 = a_max_imp;
+  Serial.print(a);
+  Serial.print("  ");
+  Serial.print(a_max_imp);
+  Serial.print("  ");
+  Serial.print(a_max);
+  Serial.print('\n');
+  //a_max = abs(a);
+  /*
+  if((a > 1.0) and (a > a0))
   {
     if(a >= a_max)
     {
       a_max = a;  
     }
   }
-  if((a_max != 0) and (a < a_max) and (a < a0) and (a < 0.15))
+  if((a_max != 0) and (a < a_max) and (a < a0) and (a < 1.0))
   {
     a_max_imp = a_max;
     a_max = 0;
@@ -88,16 +118,17 @@ void loop()
   Serial.print(a);
   Serial.print(" ");
   Serial.print(a_max);
+  //Serial.print(" ");
+  //Serial.print(a_min);
+  //Serial.print(" ");
+  //Serial.print(a_max_imp);
   Serial.print(" ");
-  Serial.print(a_min);
+  //Serial.print(a_min_imp);
   Serial.print(" ");
-  Serial.print(a_max_imp);
+  //Serial.print(count_max);
   Serial.print(" ");
-  Serial.print(a_min_imp);
-  Serial.print(" ");
-  Serial.print(count_max);
-  Serial.print(" ");
-  Serial.print(count_min);
+  //Serial.print(count_min);
   Serial.print("\n");
   a0 = a;
+  */
 }
