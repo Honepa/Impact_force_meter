@@ -25,7 +25,16 @@ float min_x = 0;
 float cal_x = 0;
 float x = 0;
 
+long t = 0;
+
 float angle, x_1, y_1, z_1, x_0, y_0, z_0 = 0;
+
+float angle0, now_angle, angle_max, angle_max_0 = 0;
+float angle_const = 0.3;
+int count_imp = 0;
+int fl = 0;
+
+long time_const = 100;
 
 void readAccel()
 {
@@ -88,13 +97,26 @@ void readFrom(byte address, int num, byte _buff[])
   Wire.endTransmission(); // end transmission
 }
 
+float get_angle()
+{
+  readAccel();
+  angle = (x_0 * x_1 + y_0 * y_1 + z_0 * z_1) / (sqrtf(x_0 * x_0 + y_0 * y_0 + z_0 * z_0) * sqrtf(x_1 * x_1 + y_1 * y_1 + z_1 * z_1));
+
+  //Serial.println(angle);
+  //delay(100);
+  x_0 = x_1;
+  y_0 = y_1;
+  z_0 = z_1;
+  return angle;
+}
+
 void setup()
 {
   Serial.begin(115200);
   //ADXL345
-  // i2c bus SDA = GPIO0; SCL = GPIO2
+  // i2c bus SDA = D2; SCL = D1
   Wire.begin();
-
+  t = micros();
   // Put the ADXL345 into +/- 2G range by writing the value 0x01 to the DATA_FORMAT register.
   // FYI: 0x00 = 2G, 0x01 = 4G, 0x02 = 8G, 0x03 = 16G
   writeTo(DATA_FORMAT, 0x00);
@@ -102,9 +124,9 @@ void setup()
   // Put the ADXL345 into Measurement Mode by writing 0x08 to the POWER_CTL register.
   writeTo(POWER_CTL, 0x08);
   /*
-  int i = 0;
-  for (i = 0; i < 11; i++)
-  {
+    int i = 0;
+    for (i = 0; i < 11; i++)
+    {
     //uint8_t howManyBytesToRead = 6;
     //readFrom( DATAX0, howManyBytesToRead, _buff);
     float calib_x ;//= (((short)_buff[1]) << 8) | _buff[0];
@@ -115,25 +137,60 @@ void setup()
       cal_x = cal_x + calib_x;
     Serial.println(calib_x);
     delay(100);
-  }
+    }
 
-  cal_x = cal_x / 10;
-  Serial.print("cal_x: "); Serial.println(cal_x);
+    cal_x = cal_x / 10;
+    Serial.print("cal_x: "); Serial.println(cal_x);
   */
   readAccel();
   x_0 = x_1;
   y_0 = y_1;
   z_0 = z_1;
+  t = millis();
 }
 
 void loop()
 {
-  readAccel();
-  angle = (x_0 * x_1 + y_0 * y_1 + z_0 * z_1) / (sqrtf(x_0 * x_0 + y_0 * y_0 + z_0 * z_0) * sqrtf(x_1 * x_1 + y_1 * y_1 + z_1 * z_1));
-  
-  Serial.println(angle);
-  delay(100);
-  x_0 = x_1;
-  y_0 = y_1;
-  z_0 = z_1;
+  Serial.print(get_angle());
+  Serial.print(" ");
+  Serial.print(angle_const);
+  Serial.print(" ");
+  now_angle = get_angle();
+  /*
+  if(now_angle < angle_const)
+  {
+    if((angle0 > now_angle) and fl)
+    {
+      count_imp++;
+      fl = 0;
+      angle_max = now_angle;
+    }
+    if((angle0 > now_angle) and (now_angle < angle_max))
+    {
+      fl = 1;
+    }
+    if((angle_max_0 > angle_max) and (angle0 > now_angle))
+    {
+     // count_imp--;
+    }
+  }
+  else if(now_angle > angle_const)
+  {
+    angle_max = angle_const;
+  }
+  */
+  if((now_angle < angle_const) and (millis() - t > time_const))
+  {
+    count_imp++;
+    fl = 1;
+  }
+  if((now_angle > angle_const) and fl)
+  {
+    t = millis();
+    fl = 0;
+  }
+  angle0 = now_angle;
+  angle_max_0 = angle_max;
+  Serial.print(count_imp);
+  Serial.print('\n');
 }
