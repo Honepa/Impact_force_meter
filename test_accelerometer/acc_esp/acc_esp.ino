@@ -29,12 +29,29 @@ long t = 0;
 
 float angle, x_1, y_1, z_1, x_0, y_0, z_0 = 0;
 
+float angle_x, angle_y, angle_z;
+
+//x
+float 0_x = 1;
+float 0_y = 0;
+float 0_z = 0;
+
+//y
+float 1_x = 0;
+float 1_y = 1;
+float 1_z = 0;
+
+//z
+float 2_x = 0;
+float 2_y = 0;
+float 2_z = 1;
+
 float angle0, now_angle, angle_max, angle_max_0 = 0;
-float angle_const = 0.3;
+float angle_const = 0.0;
 int count_imp = 0;
 int fl = 0;
 
-long time_const = 100;
+long time_const = 120;
 
 void readAccel()
 {
@@ -101,7 +118,9 @@ float get_angle()
 {
   readAccel();
   angle = (x_0 * x_1 + y_0 * y_1 + z_0 * z_1) / (sqrtf(x_0 * x_0 + y_0 * y_0 + z_0 * z_0) * sqrtf(x_1 * x_1 + y_1 * y_1 + z_1 * z_1));
-
+  angle_x = (0_x * x_1 + 0_y * y_1 + 0_z * z_1) / (sqrtf(0_x * 0_x + 0_y * 0_y + 0_z * 0_z) * sqrtf(x_1 * x_1 + y_1 * y_1 + z_1 * z_1));
+  angle_y = (1_x * x_1 + 1_y * y_1 + 1_z * z_1) / (sqrtf(1_x * 1_x + 1_y * 1_y + 1_z * 1_z) * sqrtf(x_1 * x_1 + y_1 * y_1 + z_1 * z_1));
+  angle_z = (2_x * x_1 + 2_y * y_1 + 2_z * z_1) / (sqrtf(2_x * 2_x + 2_y * 2_y + 2_z * 2_z) * sqrtf(x_1 * x_1 + y_1 * y_1 + z_1 * z_1));
   //Serial.println(angle);
   //delay(100);
   x_0 = x_1;
@@ -155,6 +174,12 @@ void loop()
   Serial.print(" ");
   Serial.print(angle_const);
   Serial.print(" ");
+  Serial.print(angle_x);
+  Serial.print(" ");
+  Serial.print(angle_y);
+  Serial.print(" ");
+  Serial.print(angle_z);
+  Serial.print(" ");
   now_angle = get_angle();
   /*
   if(now_angle < angle_const)
@@ -191,6 +216,6 @@ void loop()
   }
   angle0 = now_angle;
   angle_max_0 = angle_max;
-  Serial.print(count_imp);
+  //Serial.print(count_imp);
   Serial.print('\n');
 }

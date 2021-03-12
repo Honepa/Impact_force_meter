@@ -27,16 +27,21 @@ void loop()
   Wire.endTransmission(false);
   Wire.requestFrom(ADXL345, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
   X_out = ( Wire.read()| Wire.read() << 8); // X-axis value
-  X_out = X_out/256; //For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
+  //X_out = X_out/256; //For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
   Y_out = ( Wire.read()| Wire.read() << 8); // Y-axis value
-  Y_out = Y_out/256;
+  //Y_out = Y_out/256;
   Z_out = ( Wire.read()| Wire.read() << 8); // Z-axis value
-  Z_out = Z_out/256;
+  //Z_out = Z_out/256;
   
   x = (X_out / 0.97739) * 9.8;
   y = (Y_out / 0.97739) * 9.8;
   z = (Z_out / 0.97739) * 9.8;
   a = sqrt(x * x + y * y + z * z);
-  Serial.println(a);
+  Serial.print(X_out);
+  Serial.print("  ");
+  Serial.print(Y_out);
+  Serial.print("  ");
+  Serial.print(Z_out);
+  Serial.print("\n"); 
   
 }
