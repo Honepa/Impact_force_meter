@@ -38,7 +38,7 @@ int fl = 0;
 
 long time_const = 100;
 
-String frontend = "<head> <title>IFM - 01</title> <style> body{ background-size: 50px 50px; background-color: #ddd;background-image: -webkit-linear-gradient(transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2)),-webkit-linear-gradient(0deg, transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2));background-image: -moz-linear-gradient(transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2)),-moz-linear-gradient(0deg, transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2));background-image: linear-gradient(transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2)),linear-gradient(90deg, transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2));}</style></head>";
+String frontend = "<head> <title>IFM - 03</title> <style> body{ background-size: 50px 50px; background-color: #ddd;background-image: -webkit-linear-gradient(transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2)),-webkit-linear-gradient(0deg, transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2));background-image: -moz-linear-gradient(transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2)),-moz-linear-gradient(0deg, transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2));background-image: linear-gradient(transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2)),linear-gradient(90deg, transparent 50%, rgba(136, 136, 136, .2) 50%, rgba(136, 136, 136, .2));}</style></head>";
 
 void readAccel()
 {
@@ -119,7 +119,7 @@ const char* password = "ifmhonepa";
 long t_red = 0;
 
 //Wifi stat ip set
-IPAddress ip(192, 168, 88, 200);
+IPAddress ip(192, 168, 88, 202);
 IPAddress geteway(192, 168, 88, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -178,7 +178,7 @@ void loop()
       client.println("<meta charset='utf-8'");
       client.println(frontend);
       client.println("<body>");
-      client.println("<h1 align='center'> IFM - 01 </h1>");
+      client.println("<h1 align='center'> IFM - 03 </h1>");
       client.println("</body>");
       count_imp = 0;
       t_red = millis();
@@ -200,7 +200,7 @@ void loop()
         angle_max_0 = angle_max;
         Serial.println(count_imp);
       }
-      client.println("<script>window.location.href = 'http://192.168.88.200'</script>");
+      client.println("<script>window.location.href = 'http://192.168.88.202'</script>");
 
     }
     else if (request.indexOf("/60_sec") != -1)
@@ -211,7 +211,7 @@ void loop()
       client.println("<meta charset='utf-8'");
       client.println(frontend);
       client.println("<body>");
-      client.println("<h1 align='center'> IFM - 01 </h1>");
+      client.println("<h1 align='center'> IFM - 03 </h1>");
       
       client.println("</body>");
       count_imp = 0;
@@ -234,7 +234,7 @@ void loop()
         angle_max_0 = angle_max;
         Serial.println(count_imp);
       }
-      client.println("<script>window.location.href = 'http://192.168.88.200'</script>");
+      client.println("<script>window.location.href = 'http://192.168.88.202'</script>");
 
     }
     else if (request.indexOf("/90_sec") != -1)
@@ -245,7 +245,7 @@ void loop()
       client.println("<meta charset='utf-8'");
       client.println(frontend);
       client.println("<body>");
-      client.println("<h1 align='center'> IFM - 01 </h1>");
+      client.println("<h1 align='center'> IFM - 03 </h1>");
       client.println("</body>");
       count_imp = 0;
       t_red = millis();
@@ -267,7 +267,7 @@ void loop()
         angle_max_0 = angle_max;
         Serial.println(count_imp);
       }
-      client.println("<script>window.location.href = 'http://192.168.88.200'</script>");
+      client.println("<script>window.location.href = 'http://192.168.88.202'</script>");
 
     }
     else if (request.indexOf("/") != -1)
@@ -278,7 +278,7 @@ void loop()
       client.println("<meta charset='utf-8'");
       client.println(frontend);
       client.println("<body>");
-      client.println("<h1 align='center'> IFM - 01 </h1>");
+      client.println("<h1 align='center'> IFM - 03 </h1>");
       client.println("");
       client.print("<p style='font-size: 100pt; text-align: center'>");
       client.print(count_imp);
